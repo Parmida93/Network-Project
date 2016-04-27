@@ -1,0 +1,129 @@
+import java.awt.image.PackedColorModel;
+import java.io.UnsupportedEncodingException;
+
+import org.jnetpcap.Pcap;
+import org.jnetpcap.PcapHeader;
+import org.jnetpcap.nio.JMemory;
+import org.jnetpcap.packet.JScanner;
+import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.protocol.network.Ip4;
+import org.jnetpcap.protocol.tcpip.Tcp;
+import org.jnetpcap.protocol.tcpip.Udp;
+
+public class MyClass {
+	
+	private static MyFile myfile = new MyFile("packets.txt");
+	private static int sumTCPPayloadLength;
+	private static int tcpPacketNo;
+	private static int sumUDPPayloadLength;
+	private static int udpPacketNo;
+	private static int sumUDPLength;
+	private static int sumTCPLength;
+	private static long initialTime = 0;
+	
+	public static void main(String[] args) {
+		String FILENAME;
+		for (int i = 1; i < 5; i++) {
+			System.out.println(i);
+			String name = "Video" + i + "_QUIC";
+			FILENAME = "src/" + name + ".pcap"; 
+//		FILENAME = "src/HTTP_SampleA.pcap";
+			
+			readPcapFile(FILENAME, name);			
+		}
+	}
+	
+	private static void readPcapFile(String FILENAME, String name){
+		final StringBuilder errbuf = new StringBuilder();
+
+		final Pcap pcap = Pcap.openOffline(FILENAME, errbuf);
+		if (pcap == null) {
+			System.err.println(errbuf);
+			return;
+		}
+		JScanner.getThreadLocal().setFrameNumber(0);
+
+		PcapPacket packet = new PcapPacket(JMemory.POINTER);
+
+		myfile.openFile();
+		MyFile traceFile = new MyFile("./Traces/" + name + ".txt");
+		traceFile.openFile();
+		boolean isStart = true;
+		while(pcap.nextEx(packet) == Pcap.NEXT_EX_OK) {
+//			System.out.println(packet);
+			if(isStart){
+				initialTime = packet.getCaptureHeader().timestampInMicros();
+				isStart = false;
+			}
+			writeTraceFile(packet, traceFile);
+			analyzePacketHeader(packet);
+		}
+
+//		analyzeFlows();
+////		printFlows();
+//		String outStr = "Average TCP Payload Length: " + (sumTCPPayloadLength*1.0/tcpPacketNo) + "\n" + 
+//						"Average UDP Payload Length: " + (sumUDPPayloadLength*1.0/udpPacketNo) + "\n" +
+//						"Average TCP Length: " + (sumTCPLength*1.0/tcpPacketNo) + "\n" + 
+//						"Average UDP Length: " + (sumUDPLength*1.0/udpPacketNo);
+//		myfile.writeInFile(outStr);
+		myfile.closeFile();
+		traceFile.closeFile();
+		pcap.close();
+
+	}
+	
+	
+	private static void writeTraceFile(PcapPacket packet, MyFile traceFile) {
+		String outStr = "";
+		Ip4 ip = new Ip4();
+		if(packet.hasHeader(Ip4.ID)){
+            packet.getHeader(ip);
+            byte[] dIP = new byte[4], sIP = new byte[4];
+			PcapHeader header = packet.getCaptureHeader();
+			outStr += packet.getFrameNumber() + " ";
+			outStr += ((header.timestampInMicros() - initialTime) / Math.pow(10, 6)) + " ";
+			dIP = packet.getHeader(ip).destination();
+			sIP = packet.getHeader(ip).source();
+			String sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIP);
+			String destIP = org.jnetpcap.packet.format.FormatUtils.ip(dIP);
+			outStr += sourceIP + " " + destIP + " ";
+			outStr += findProtocol(packet.getByte(23)) + " ";
+			outStr += header.caplen() + "\n";
+		}
+//		System.out.println(outStr);
+		traceFile.writeInFile(outStr);
+	}
+
+	private static String findProtocol(byte protocolNo) {
+		String protocol = "";
+		if(protocolNo == 6)
+			protocol = "TCP";
+		else
+			protocol = "UDP";
+		return protocol;
+			
+	}
+
+	private static void analyzePacketHeader(PcapPacket packet) {
+		int protocolNo = packet.getByte(23);
+		if (protocolNo == 6) {			
+			Ip4 ip = packet.getHeader(new Ip4());
+			Tcp tcp = packet.getHeader(new Tcp());
+			int length = tcp.getPayloadLength();
+			String ans = length + "\n";
+			myfile.writeInFile(ans);
+			sumTCPLength += tcp.getPayloadLength() + tcp.getHeaderLength();
+			sumTCPPayloadLength += tcp.getPayloadLength();
+			tcpPacketNo++;
+		}
+		else if(protocolNo == 17){
+			Udp udp = packet.getHeader(new Udp());
+//			String ans = udp.getPayloadLength() + "\n";
+//			myfile.writeInFile(ans);
+			sumUDPLength += udp.length();
+			sumUDPPayloadLength += udp.getPayloadLength();
+			udpPacketNo++;
+		}
+	}
+
+}
