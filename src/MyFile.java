@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class MyFile {
+	
 	private FileWriter fw;
 	private BufferedWriter bw;
 	private File file;
