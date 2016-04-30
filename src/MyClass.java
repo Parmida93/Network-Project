@@ -1,6 +1,3 @@
-import java.awt.image.PackedColorModel;
-import java.io.UnsupportedEncodingException;
-
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapHeader;
 import org.jnetpcap.nio.JMemory;
@@ -12,16 +9,19 @@ import org.jnetpcap.protocol.tcpip.Udp;
 
 public class MyClass {
 	
-	private static MyFile myfile = new MyFile("packets.txt");
-	private static int sumTCPPayloadLength;
-	private static int tcpPacketNo;
-	private static int sumUDPPayloadLength;
-	private static int udpPacketNo;
-	private static int sumUDPLength;
-	private static int sumTCPLength;
-	private static long initialTime = 0;
+	private MyFile myfile = new MyFile("packets.txt");
+	private int sumTCPPayloadLength;
+	private int tcpPacketNo;
+	private int sumUDPPayloadLength;
+	private int udpPacketNo;
+	private int sumUDPLength;
+	private int sumTCPLength;
+	private long initialTime = 0;
 	
 	public static void main(String[] args) {
+		
+		MyClass c = new MyClass();
+		
 		String FILENAME;
 		for (int i = 1; i < 5; i++) {
 			System.out.println(i);
@@ -29,11 +29,11 @@ public class MyClass {
 			FILENAME = "src/" + name + ".pcap"; 
 //		FILENAME = "src/HTTP_SampleA.pcap";
 			
-			readPcapFile(FILENAME, name);			
+			c.readPcapFile(FILENAME, name+"SInaaa_");
 		}
 	}
 	
-	private static void readPcapFile(String FILENAME, String name){
+	private void readPcapFile(String FILENAME, String name){
 		final StringBuilder errbuf = new StringBuilder();
 
 		final Pcap pcap = Pcap.openOffline(FILENAME, errbuf);
@@ -57,6 +57,7 @@ public class MyClass {
 			}
 			writeTraceFile(packet, traceFile);
 			analyzePacketHeader(packet);
+			
 		}
 
 //		analyzeFlows();
@@ -73,7 +74,7 @@ public class MyClass {
 	}
 	
 	
-	private static void writeTraceFile(PcapPacket packet, MyFile traceFile) {
+	private void writeTraceFile(PcapPacket packet, MyFile traceFile) {
 		String outStr = "";
 		Ip4 ip = new Ip4();
 		if(packet.hasHeader(Ip4.ID)){
@@ -81,7 +82,7 @@ public class MyClass {
             byte[] dIP = new byte[4], sIP = new byte[4];
 			PcapHeader header = packet.getCaptureHeader();
 			outStr += packet.getFrameNumber() + " ";
-			outStr += ((header.timestampInMicros() - initialTime) / Math.pow(10, 6)) + " ";
+			outStr += ((header.timestampInMicros() - this.initialTime) / Math.pow(10, 6)) + " ";
 			dIP = packet.getHeader(ip).destination();
 			sIP = packet.getHeader(ip).source();
 			String sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIP);
@@ -94,7 +95,7 @@ public class MyClass {
 		traceFile.writeInFile(outStr);
 	}
 
-	private static String findProtocol(byte protocolNo) {
+	private String findProtocol(byte protocolNo) {
 		String protocol = "";
 		if(protocolNo == 6)
 			protocol = "TCP";
@@ -104,10 +105,10 @@ public class MyClass {
 			
 	}
 
-	private static void analyzePacketHeader(PcapPacket packet) {
+	private void analyzePacketHeader(PcapPacket packet) {
 		int protocolNo = packet.getByte(23);
 		if (protocolNo == 6) {			
-			Ip4 ip = packet.getHeader(new Ip4());
+//			Ip4 ip = packet.getHeader(new Ip4());
 			Tcp tcp = packet.getHeader(new Tcp());
 			int length = tcp.getPayloadLength();
 			String ans = length + "\n";
