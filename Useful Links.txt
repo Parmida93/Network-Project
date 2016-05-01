@@ -1,0 +1,2 @@
+https://tools.ietf.org/html/draft-tsvwg-quic-protocol-00
+https://docs.google.com/document/d/1lmL9EF6qKrk7gbazY8bIdvq3Pno2Xj_l_YShP40GLQE/edit
