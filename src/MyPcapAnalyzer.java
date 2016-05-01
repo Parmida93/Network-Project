@@ -118,6 +118,8 @@ public class MyPcapAnalyzer {
         		myPacket = newPcap.createTCPPacket(packet, myPacket, IPHeaderStartPoint, counter, myPcapAnalyzer, initTime);
         	else if ( tcpUDP == 17)
         		myPacket = newPcap.createUDPPacket(packet, myPacket, initTime);
+        	else
+        		System.err.println("UNKNOWN transmission protocol: " + tcpUDP);
 
         	String[] keys = myPcapAnalyzer.keyGen(myPacket.getSourceIP(), myPacket.getDestIP(), myPacket.getSourcePort(), myPacket.getDestPort());
         	boolean newFlow = true;
