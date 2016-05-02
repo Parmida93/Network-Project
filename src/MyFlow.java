@@ -230,12 +230,20 @@ public class MyFlow {
 
 	private void checkValidity() {
 		boolean ans = true;
-
-		if (this.flow.size() < 3) {
+//		if( this.flow.)
+		if (this.flow.size() < 10) {
 			ans = false;
-		} else {
+		} 
+		// For checking 3way handshake TCP
+		/*else {
 			MyPacket first = this.flow.get(0);
-			int t1 = first.getType()[0];
+			int t1 =0;
+			try{
+				t1 = first.getType()[0];
+			} catch( NullPointerException e){
+				this.setValid(false);
+				return;
+			}
 			if (first.getType().length != 1 || t1 != 6) {
 				ans = false;
 			} else {
@@ -251,7 +259,7 @@ public class MyFlow {
 					ans = false;
 				}
 			}
-		}
+		}*/
 
 		this.setValid(ans);
 	}

@@ -1,2 +1,4 @@
 https://tools.ietf.org/html/draft-tsvwg-quic-protocol-00
 https://docs.google.com/document/d/1lmL9EF6qKrk7gbazY8bIdvq3Pno2Xj_l_YShP40GLQE/edit
+https://docs.google.com/document/d/1RNHkx_VvKWyWg6Lr8SZ-saqsQx7rFV-ev2jRFUoVD34/mobilebasic?pli=1#h.mtr200oibue9
+https://groups.google.com/a/chromium.org/forum/#!forum/proto-quic

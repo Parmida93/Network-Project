@@ -1,5 +1,6 @@
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.protocol.network.Ip4;
+import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
 public class NewPcapAnalyzer {
@@ -11,7 +12,7 @@ public class NewPcapAnalyzer {
     	int IPHeaderSize = temp * 4;
     	int TCPHeaderStartPoint = IPHeaderStartPoint + IPHeaderSize;
     	
-    	myPacket.setID(counter);
+//    	myPacket.setID(counter);
     	
     	myPacket.setSourcePort(packet.getByteArray(TCPHeaderStartPoint , 2) );
     	myPacket.setDestPort(packet.getByteArray(TCPHeaderStartPoint + 2 , 2) );
@@ -24,10 +25,16 @@ public class NewPcapAnalyzer {
     	temp = (temp & first4Bit) >> 4;
     	int TCPHeaderSize = temp * 4;
     	myPacket.setDataLen(packet.getByteArray(IPHeaderStartPoint + 2 , 2), IPHeaderSize, TCPHeaderSize);
+    	Tcp tcp = new Tcp();
+		packet.hasHeader(tcp);
+		myPacket.setTotalSize(tcp.getLength());
+		myPacket.setDataLen(tcp.getLength() - tcp.getHeaderLength());
+		
     	
     	byte typeByte = packet.getByte(TCPHeaderStartPoint + 13);
     	Integer[] typeIndexes = myPcapAnalyzer.typeDetector(typeByte);
     	myPacket.setType(typeIndexes);
+    	
     	
     	if( (typeIndexes[0] == 6) || (typeIndexes.length > 1 && typeIndexes[1] == 6 ) ){
     		byte[] MSS = packet.getByteArray(TCPHeaderStartPoint + 22 , 2);
@@ -43,6 +50,10 @@ public class NewPcapAnalyzer {
 			myPacket.setSourcePort(udp.source());
 			myPacket.setDestPort(udp.destination());
 			myPacket.setDataLen(udp.length() - udp.getHeaderLength());
+			myPacket.setTotalSize(udp.length());
+//			myPacket.setHe
+//			JNetPcapFormatter.
+//			udp.getHeader();
 		}
 		
 		return myPacket;
@@ -57,6 +68,8 @@ public class NewPcapAnalyzer {
 		long currentTime = packet.getCaptureHeader().timestampInMicros();
     	myPacket.setAbsoluteTime(currentTime);
     	myPacket.setTime(currentTime - initTime);
+    	Integer[] arr = {8};
+    	myPacket.setType(arr);
 		
 		return myPacket;
 	}
