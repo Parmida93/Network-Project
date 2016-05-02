@@ -1,4 +1,7 @@
+import org.jnetpcap.packet.PcapPacket;
+
 public class MyPacket {
+	
 	private Integer[] type;
 	private byte[] seqNum;
 	private byte[] ackNum;

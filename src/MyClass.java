@@ -1,9 +1,7 @@
 import org.jnetpcap.Pcap;
-import org.jnetpcap.PcapHeader;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.JScanner;
 import org.jnetpcap.packet.PcapPacket;
-import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
@@ -16,7 +14,7 @@ public class MyClass {
 	private int udpPacketNo;
 	private int sumUDPLength;
 	private int sumTCPLength;
-	private long initialTime = 0;
+	public long initialTime = 0;
 	
 	public static void main(String[] args) {
 		
@@ -29,11 +27,11 @@ public class MyClass {
 			FILENAME = "src/" + name + ".pcap"; 
 //		FILENAME = "src/HTTP_SampleA.pcap";
 			
-			c.readPcapFile(FILENAME, name+"SInaaa_");
+			c.readPcapFile(FILENAME, name);
 		}
 	}
 	
-	private void readPcapFile(String FILENAME, String name){
+	public void readPcapFile(String FILENAME, String name){
 		final StringBuilder errbuf = new StringBuilder();
 
 		final Pcap pcap = Pcap.openOffline(FILENAME, errbuf);
@@ -55,8 +53,9 @@ public class MyClass {
 				initialTime = packet.getCaptureHeader().timestampInMicros();
 				isStart = false;
 			}
-			writeTraceFile(packet, traceFile);
-			analyzePacketHeader(packet);
+			
+//			writeTraceFile(packet, traceFile);
+//			analyzePacketHeader(packet);
 			
 		}
 
@@ -74,23 +73,21 @@ public class MyClass {
 	}
 	
 	
-	private void writeTraceFile(PcapPacket packet, MyFile traceFile) {
+	public void writeTraceFile( MyFile traceFile, MyPacket packet, boolean isUDP) {
+		String protocol = "TCP";
+		if( isUDP)
+			protocol = "UDP";
 		String outStr = "";
-		Ip4 ip = new Ip4();
-		if(packet.hasHeader(Ip4.ID)){
-            packet.getHeader(ip);
-            byte[] dIP = new byte[4], sIP = new byte[4];
-			PcapHeader header = packet.getCaptureHeader();
-			outStr += packet.getFrameNumber() + " ";
-			outStr += ((header.timestampInMicros() - this.initialTime) / Math.pow(10, 6)) + " ";
-			dIP = packet.getHeader(ip).destination();
-			sIP = packet.getHeader(ip).source();
-			String sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIP);
-			String destIP = org.jnetpcap.packet.format.FormatUtils.ip(dIP);
-			outStr += sourceIP + " " + destIP + " ";
-			outStr += findProtocol(packet.getByte(23)) + " ";
-			outStr += header.caplen() + "\n";
-		}
+        byte[] dIP = new byte[4], sIP = new byte[4];
+		outStr += packet.getID() + " ";
+		outStr += ((packet.getTime() ) / Math.pow(10, 6)) + " ";
+		dIP = packet.getDestIP();
+		sIP = packet.getSourceIP();
+		String sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIP);
+		String destIP = org.jnetpcap.packet.format.FormatUtils.ip(dIP);
+		outStr += sourceIP + " " + destIP + " ";
+		outStr += protocol + " ";
+		outStr += packet.getTotalSize() + "\n";
 //		System.out.println(outStr);
 		traceFile.writeInFile(outStr);
 	}

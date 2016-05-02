@@ -67,6 +67,7 @@ public class NewPcapAnalyzer {
 		}
 		long currentTime = packet.getCaptureHeader().timestampInMicros();
     	myPacket.setAbsoluteTime(currentTime);
+    	
     	myPacket.setTime(currentTime - initTime);
     	Integer[] arr = {8};
     	myPacket.setType(arr);
