@@ -27,9 +27,9 @@ public class NewPcapAnalyzer {
     	myPacket.setDataLen(packet.getByteArray(IPHeaderStartPoint + 2 , 2), IPHeaderSize, TCPHeaderSize);
     	Tcp tcp = new Tcp();
 		packet.hasHeader(tcp);
-		myPacket.setTotalSize(tcp.getLength());
-		myPacket.setDataLen(tcp.getLength() - tcp.getHeaderLength());
-		
+//		myPacket.setTotalSize(tcp.getLength());
+		myPacket.setDataLen(tcp.getPayloadLength() + tcp.getPostfixLength());
+		myPacket.setHeaderSize(tcp.getHeaderLength());
     	
     	byte typeByte = packet.getByte(TCPHeaderStartPoint + 13);
     	Integer[] typeIndexes = myPcapAnalyzer.typeDetector(typeByte);
@@ -50,7 +50,7 @@ public class NewPcapAnalyzer {
 			myPacket.setSourcePort(udp.source());
 			myPacket.setDestPort(udp.destination());
 			myPacket.setDataLen(udp.length() - udp.getHeaderLength());
-			myPacket.setTotalSize(udp.length());
+			myPacket.setHeaderSize(udp.getHeaderLength());
 //			myPacket.setHe
 //			JNetPcapFormatter.
 //			udp.getHeader();
@@ -70,7 +70,8 @@ public class NewPcapAnalyzer {
     	myPacket.setTime(currentTime - initTime);
     	Integer[] arr = {8};
     	myPacket.setType(arr);
-		
+//    	myPacket.setTotalSize(packet.getTotalSize());
+    	myPacket.setTotalSize(packet.size());
 		return myPacket;
 	}
 }

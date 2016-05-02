@@ -154,7 +154,7 @@ public class MyPcapAnalyzer {
         		continue;
         	ArrayList<MyPacket> temp = tempFlow.getFlow();
         	for (MyPacket myPacket : temp) {
-				System.out.println(myPacket);
+//				System.out.println(myPacket);
 			}
 //        	System.err.println(tempFlow.isValid());
 //        	if( howToRun[1]){
