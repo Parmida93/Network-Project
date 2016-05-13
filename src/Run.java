@@ -91,12 +91,16 @@ public class Run {
 					if(p.equals(temp)){
 						p.setRetransmission(true);
 						temp.setRetransmission(true);
-						lossNumbers ++;
+//						lossNumbers ++;
 //						System.out.println(p.toString());
 //						System.out.println(temp.toString());
 					}					
 				}
 			}
+		}
+		for (int i = 0; i < packets.size(); i++) {
+			if(packets.get(i).isRetransmission() == true)
+				lossNumbers++;
 		}
 		return lossNumbers;
 	}
