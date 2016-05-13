@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 import org.jnetpcap.Pcap;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.JScanner;
 import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
@@ -15,7 +18,7 @@ public class MyClass {
 	private int sumUDPLength;
 	private int sumTCPLength;
 	public long initialTime = 0;
-	
+	public ArrayList<NewPacket> packets;
 	public static void main(String[] args) {
 		
 		MyClass c = new MyClass();
@@ -47,12 +50,16 @@ public class MyClass {
 		MyFile traceFile = new MyFile("./Traces/" + name + ".txt");
 		traceFile.openFile();
 		boolean isStart = true;
+		packets = new ArrayList<>();
 		while(pcap.nextEx(packet) == Pcap.NEXT_EX_OK) {
 //			System.out.println(packet);
 			if(isStart){
 				initialTime = packet.getCaptureHeader().timestampInMicros();
 				isStart = false;
 			}
+			
+			NewPacket p = new NewPacket(packet);
+			packets.add(p);
 //			writeTraceFile(packet, traceFile);
 //			analyzePacketHeader(packet);
 			
