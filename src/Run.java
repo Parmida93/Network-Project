@@ -87,11 +87,13 @@ public class Run {
 			MyPacket p = packets.get(i);
 			for (int j = i - 1; j >= 0; j--) {
 				MyPacket temp = packets.get(j);
-				if(temp.getType()[0] != 8){
+				if(p.getType()[0] != 8 && temp.getType()[0] != 8){
 					if(p.equals(temp)){
 						p.setRetransmission(true);
 						temp.setRetransmission(true);
 						lossNumbers ++;
+//						System.out.println(p.toString());
+//						System.out.println(temp.toString());
 					}					
 				}
 			}
