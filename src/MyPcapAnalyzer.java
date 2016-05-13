@@ -15,7 +15,7 @@ import org.jnetpcap.packet.PcapPacket;
 public class MyPcapAnalyzer {  
   
 	
-	public static String[] types = {"CWR", "ECE", "URG", "ACK", "PSH", "RST", "SYN", "FIN"};
+	public static String[] types = {"CWR", "ECE", "URG", "ACK", "PSH", "RST", "SYN", "FIN", "UDP"};
 	
 	public Integer[] typeDetector(byte b){
 		ArrayList<Integer> indexes = new ArrayList<>(); 
@@ -68,7 +68,7 @@ public class MyPcapAnalyzer {
 		return ans;
 	}
 
-	public void run(String file ) {  
+	public ArrayList<MyPacket> run(String file ) {  
 
 		MyPcapAnalyzer myPcapAnalyzer = new MyPcapAnalyzer();
 		
@@ -86,7 +86,6 @@ public class MyPcapAnalyzer {
         if (pcap == null) {  
             System.err.printf("Error while opening device for capture: "  
                 + errbuf.toString());  
-            return;  
         }
         
         PcapPacket packetPointer = new PcapPacket(JMemory.POINTER);
@@ -94,18 +93,20 @@ public class MyPcapAnalyzer {
         
         int IPHeaderStartPoint = 14;
         
-        int counter = 0;
+        int counter = 1;
         boolean first = true;
         long initTime = 0 ;
         
         HashMap<String, MyFlow> flows = new HashMap<>();
+        ArrayList<MyPacket> packetsss = new ArrayList<>();
         
         while (pcap.nextEx(packetPointer) == Pcap.NEXT_EX_OK) {
-        	counter ++ ;
         	
         	PcapPacket packet = new PcapPacket(packetPointer);
         	MyPacket myPacket = new MyPacket();
-
+        	myPacket.setID(counter);
+        	counter ++ ;
+        	
         	byte tcpUDP = packet.getByte(IPHeaderStartPoint + 9);
         	
         	if(first){
@@ -118,6 +119,11 @@ public class MyPcapAnalyzer {
         		myPacket = newPcap.createTCPPacket(packet, myPacket, IPHeaderStartPoint, counter, myPcapAnalyzer, initTime);
         	else if ( tcpUDP == 17)
         		myPacket = newPcap.createUDPPacket(packet, myPacket, initTime);
+        	else{
+        		System.err.println("UNKNOWN transmission protocol: " + tcpUDP);
+        		continue;
+        	}
+        	packetsss.add(myPacket);
 
         	String[] keys = myPcapAnalyzer.keyGen(myPacket.getSourceIP(), myPacket.getDestIP(), myPacket.getSourcePort(), myPacket.getDestPort());
         	boolean newFlow = true;
@@ -147,6 +153,9 @@ public class MyPcapAnalyzer {
         	if(!tempFlow.isValid())
         		continue;
         	ArrayList<MyPacket> temp = tempFlow.getFlow();
+        	for (MyPacket myPacket : temp) {
+//				System.out.println(myPacket);
+			}
 //        	System.err.println(tempFlow.isValid());
 //        	if( howToRun[1]){
 //        		for (MyPacket myPacket2 : temp) {
@@ -191,5 +200,9 @@ public class MyPcapAnalyzer {
         	
 		}
         
+        for (MyPacket myPacket : packetsss) {
+//			System.out.println(myPacket.toString());
+		}
+        return packetsss;
     }  
 }  

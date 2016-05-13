@@ -1,4 +1,7 @@
+import org.jnetpcap.packet.PcapPacket;
+
 public class MyPacket {
+	
 	private Integer[] type;
 	private byte[] seqNum;
 	private byte[] ackNum;
@@ -25,10 +28,12 @@ public class MyPacket {
 	private boolean hasData;
 	private int dataLen;
 	private int totalSize;
+//	private int headerSize;
 	
 	private int MMS;
 	private boolean retransmission = false;
 	private boolean willBeRetransmitted = false;
+	private int headerSize;
 	
 	public boolean isWillBeRetransmitted() {
 		return willBeRetransmitted;
@@ -50,6 +55,17 @@ public class MyPacket {
 	}
 	public int getTotalSize() {
 		return totalSize;
+	}
+	
+	public void setTotalSize(int t) {
+		this.totalSize = t;
+	}
+	public int getHeaderSize() {
+		return this.headerSize;
+	}
+	
+	public void setHeaderSize(int h) {
+		this.headerSize = h;
 	}
 
 	
@@ -153,10 +169,15 @@ public class MyPacket {
 		ans +=  "SourcePort: " + "\t" + this.sourcePort  + "\n" ;
 		ans +=  "DestIP  : " + this.toHex(destIP) + "\t" + this.IPtoDecimal(destIP)  + "\n" ;
 		ans +=  "DestPort  : " + "\t" + this.destPort  + "\n\n";
-		ans +=  "SeqNum: " + this.toHex(seqNum) + "\t" + this.toDecimal(seqNum)  + "\n"; 
-		ans +=  "AckNum: " + this.toHex(ackNum) + "\t" + this.toDecimal(ackNum)  + "\n";
-		ans +=  "windowSize: " + this.toHex(windowSize) + "\t" + this.toDecimal(windowSize)  + "\n\n";
+		if( this.type[0] != 8){
+			ans +=  "SeqNum: " + this.toHex(seqNum) + "\t" + this.toDecimal(seqNum)  + "\n"; 
+			ans +=  "AckNum: " + this.toHex(ackNum) + "\t" + this.toDecimal(ackNum)  + "\n";
+			ans +=  "windowSize: " + this.toHex(windowSize) + "\t" + this.toDecimal(windowSize)  + "\n\n";
+		}
 		ans +=  "DataSize: " + this.dataLen  + "\n";
+		ans +=  "TotalSize: " + this.totalSize  + "\n";
+		ans +=  "HeaderSize: " + (this.totalSize - this.dataLen)  + "\n";
+		
 				
 		return ans;
 	}
@@ -228,4 +249,5 @@ public class MyPacket {
 		}
 		return ans;
 	}
+	
 }
