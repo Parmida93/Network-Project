@@ -55,7 +55,7 @@ public class MyClass {
 				initialTime = packet.getCaptureHeader().timestampInMicros();
 				isStart = false;
 			}
-			writeTraceFile(packet, traceFile);
+//			writeTraceFile(packet, traceFile);
 			analyzePacketHeader(packet);
 			
 		}
@@ -119,6 +119,30 @@ public class MyClass {
 		}
 		else if(protocolNo == 17){
 			Udp udp = packet.getHeader(new Udp());
+			Ip4 ip = new Ip4();
+			if(packet.hasHeader(Ip4.ID)){
+	            packet.getHeader(ip);
+	            byte[] dIP = new byte[4], sIP = new byte[4];
+				dIP = packet.getHeader(ip).destination();
+				sIP = packet.getHeader(ip).source();
+				String sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIP);
+				String destIP = org.jnetpcap.packet.format.FormatUtils.ip(dIP);
+				String outStr = packet.getFrameNumber() + ": " + sourceIP + "    " + destIP;
+				System.out.println(outStr);
+			}
+//			byte[] udpHeader = udp.get;
+			System.out.print("Total: ");
+			for (int i = 0; i < udp.getLength(); i++) {
+				System.out.print(String.format("%02X ", udp.getByte(i)) + " ");
+			}
+			System.out.println();
+			
+			byte[] payload = udp.getPayload();
+			System.out.print("payload: ");
+			for (int i = 0; i < payload.length; i++) {
+				System.out.print(String.format("%02X ", payload[i]) + " ");
+			}
+			System.out.println();
 //			String ans = udp.getPayloadLength() + "\n";
 //			myfile.writeInFile(ans);
 			sumUDPLength += udp.length();
