@@ -120,7 +120,7 @@ public class MyPcapAnalyzer {
         	else if ( tcpUDP == 17)
         		myPacket = newPcap.createUDPPacket(packet, myPacket, initTime);
         	else{
-        		System.err.println("UNKNOWN transmission protocol: " + tcpUDP);
+//        		System.err.println("UNKNOWN transmission protocol: " + tcpUDP);
         		continue;
         	}
         	packetsss.add(myPacket);

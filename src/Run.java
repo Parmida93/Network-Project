@@ -29,19 +29,11 @@ public class Run {
 //		String fileaddress = "Video1_QUIC" ;
 		MyPcapAnalyzer myPcap = new MyPcapAnalyzer();
 		
-		int lossNumbers = 0;
 		ArrayList<MyPacket> packets = myPcap.run(folderAddress + fileName + ".pcap");
-		for (int i = 0; i < packets.size(); i++) {
-			MyPacket p = packets.get(i);
-			for (int j = i; j >= 0; j--) {
-				if(p.equals(packets.get(j))){
-					p.setRetransmission(true);
-					packets.get(j).setRetransmission(true);
-					lossNumbers ++;
-				}
-			}
-		}
-		System.out.println("loss:" + lossNumbers);
+
+		System.out.println("Number of Packets: " + packets.size());
+		System.out.println("Number of Loss packets: " + computeLossNumber(packets));
+		
 		File file = new File("Results/" + fileName  + ".csv");
 		try {
 			FileWriter fw = new FileWriter(file);
@@ -87,5 +79,23 @@ public class Run {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private int computeLossNumber(ArrayList<MyPacket> packets) {
+		int lossNumbers = 0;
+		for (int i = 0; i < packets.size(); i++) {
+			MyPacket p = packets.get(i);
+			for (int j = i - 1; j >= 0; j--) {
+				MyPacket temp = packets.get(j);
+				if(temp.getType()[0] != 8){
+					if(p.equals(temp)){
+						p.setRetransmission(true);
+						temp.setRetransmission(true);
+						lossNumbers ++;
+					}					
+				}
+			}
+		}
+		return lossNumbers;
 	}
 }
