@@ -141,68 +141,68 @@ public class MyPcapAnalyzer {
         		flows.put(keys[0], newMyFlow);
         	}
 		}
-        System.out.println();
-        System.out.println("Flows start here:");
-        System.out.println();
-        int flowNumber = 1;
-        Set<String> keys = flows.keySet();
-        for (String key : keys) {
-        	System.out.println("Flow number " + flowNumber);
-        	flowNumber++;
-        	MyFlow tempFlow = flows.get(key);
-        	if(!tempFlow.isValid())
-        		continue;
-        	ArrayList<MyPacket> temp = tempFlow.getFlow();
-        	for (MyPacket myPacket : temp) {
-//				System.out.println(myPacket);
-			}
-//        	System.err.println(tempFlow.isValid());
-//        	if( howToRun[1]){
-//        		for (MyPacket myPacket2 : temp) {
-//        			System.out.println(myPacket2);
-//        			System.out.println("########################");
-//        		}
-//        	}
-//        	if( howToRun[2]){
-//        		System.out.println("RTT is: " + tempFlow.getAveRTT()/1000.0 + " ms");
-//        		System.out.println("Throughput is: " + tempFlow.getThroughput(false));
-//        		System.out.println("Good Throughput is: " + tempFlow.getThroughput(true));
-//        		System.out.println("Initial Window: " + tempFlow.getIW());
-//        		
-//        	}
-        	System.out.println("////////////////////////////////////////////////");
-        	System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
- 
-        	
-//        	if( howToRun[0]){
-//        		File f = new File("A.txt");
-//        		FileWriter fw;
-//        		try {
-//        			fw = new FileWriter(f);
-//        			fw.write(tempFlow.fileOutput());
-//        			fw.flush();
-//        			fw.close();
-//        		} catch (IOException e) {
-//        			// TODO Auto-generated catch block
-//        			e.printStackTrace();
-//        		}
-//        	}
-//        	if(howToRun[3]){
-//        		C c = new C();
-//        		c.C_A_B(tempFlow);
-//        	}
-//        	if(howToRun[4]){
-//	        	double[] RTOs = tempFlow.getRetransmissionValue();
-//	        	for (double d : RTOs) {
-//					System.out.println(d);
-//				}
-//        	}
-        	
-		}
-        
-        for (MyPacket myPacket : packetsss) {
-//			System.out.println(myPacket.toString());
-		}
+//        System.out.println();
+//        System.out.println("Flows start here:");
+//        System.out.println();
+//        int flowNumber = 1;
+//        Set<String> keys = flows.keySet();
+//        for (String key : keys) {
+//        	System.out.println("Flow number " + flowNumber);
+//        	flowNumber++;
+//        	MyFlow tempFlow = flows.get(key);
+//        	if(!tempFlow.isValid())
+//        		continue;
+//        	ArrayList<MyPacket> temp = tempFlow.getFlow();
+//        	for (MyPacket myPacket : temp) {
+////				System.out.println(myPacket);
+//			}
+////        	System.err.println(tempFlow.isValid());
+////        	if( howToRun[1]){
+////        		for (MyPacket myPacket2 : temp) {
+////        			System.out.println(myPacket2);
+////        			System.out.println("########################");
+////        		}
+////        	}
+////        	if( howToRun[2]){
+////        		System.out.println("RTT is: " + tempFlow.getAveRTT()/1000.0 + " ms");
+////        		System.out.println("Throughput is: " + tempFlow.getThroughput(false));
+////        		System.out.println("Good Throughput is: " + tempFlow.getThroughput(true));
+////        		System.out.println("Initial Window: " + tempFlow.getIW());
+////        		
+////        	}
+//        	System.out.println("////////////////////////////////////////////////");
+//        	System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+// 
+//        	
+////        	if( howToRun[0]){
+////        		File f = new File("A.txt");
+////        		FileWriter fw;
+////        		try {
+////        			fw = new FileWriter(f);
+////        			fw.write(tempFlow.fileOutput());
+////        			fw.flush();
+////        			fw.close();
+////        		} catch (IOException e) {
+////        			// TODO Auto-generated catch block
+////        			e.printStackTrace();
+////        		}
+////        	}
+////        	if(howToRun[3]){
+////        		C c = new C();
+////        		c.C_A_B(tempFlow);
+////        	}
+////        	if(howToRun[4]){
+////	        	double[] RTOs = tempFlow.getRetransmissionValue();
+////	        	for (double d : RTOs) {
+////					System.out.println(d);
+////				}
+////        	}
+//        	
+//		}
+//        
+//        for (MyPacket myPacket : packetsss) {
+////			System.out.println(myPacket.toString());
+//		}
         return packetsss;
     }  
 }  

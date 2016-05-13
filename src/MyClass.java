@@ -18,7 +18,7 @@ public class MyClass {
 	private int sumUDPLength;
 	private int sumTCPLength;
 	public long initialTime = 0;
-	public ArrayList<NewPacket> packets;
+	public ArrayList<MyPacket> packets;
 	public static void main(String[] args) {
 		
 		MyClass c = new MyClass();
@@ -58,7 +58,7 @@ public class MyClass {
 				isStart = false;
 			}
 			
-			NewPacket p = new NewPacket(packet);
+			MyPacket p = new MyPacket();
 			packets.add(p);
 //			writeTraceFile(packet, traceFile);
 //			analyzePacketHeader(packet);

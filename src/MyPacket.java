@@ -1,4 +1,5 @@
 import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.protocol.network.Ip4;
 
 public class MyPacket {
 	
@@ -18,12 +19,6 @@ public class MyPacket {
 	private long time;
 	private long absoluteTime;
 	
-	public long getAbsoluteTime() {
-		return absoluteTime;
-	}
-	public void setAbsoluteTime(long absoluteTime) {
-		this.absoluteTime = absoluteTime;
-	}
 
 	private boolean hasData;
 	private int dataLen;
@@ -34,6 +29,13 @@ public class MyPacket {
 	private boolean retransmission = false;
 	private boolean willBeRetransmitted = false;
 	private int headerSize;
+	
+	public long getAbsoluteTime() {
+		return absoluteTime;
+	}
+	public void setAbsoluteTime(long absoluteTime) {
+		this.absoluteTime = absoluteTime;
+	}
 	
 	public boolean isWillBeRetransmitted() {
 		return willBeRetransmitted;

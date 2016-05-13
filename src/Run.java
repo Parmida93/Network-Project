@@ -15,7 +15,7 @@ public class Run {
 		for (File file : pcaps) {
 			String name = file.getName();
 			name = name.replace(".pcap", "");
-			
+			System.out.println("************* " + name + " *****************");
 			boolean isUDP = false;
 			if(name.contains("QUIC"))
 				isUDP = true;
@@ -29,8 +29,19 @@ public class Run {
 //		String fileaddress = "Video1_QUIC" ;
 		MyPcapAnalyzer myPcap = new MyPcapAnalyzer();
 		
+		int lossNumbers = 0;
 		ArrayList<MyPacket> packets = myPcap.run(folderAddress + fileName + ".pcap");
-		
+		for (int i = 0; i < packets.size(); i++) {
+			MyPacket p = packets.get(i);
+			for (int j = i; j >= 0; j--) {
+				if(p.equals(packets.get(j))){
+					p.setRetransmission(true);
+					packets.get(j).setRetransmission(true);
+					lossNumbers ++;
+				}
+			}
+		}
+		System.out.println("loss:" + lossNumbers);
 		File file = new File("Results/" + fileName  + ".csv");
 		try {
 			FileWriter fw = new FileWriter(file);
