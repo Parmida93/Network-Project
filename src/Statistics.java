@@ -4,7 +4,7 @@ public class Statistics {
 	
 	ArrayList<MyPacket> myPackets;
 	
-	private double totalAve = -1, dataAve = -1, headerAve = -1;
+	private double totalAve = -1, dataAve = -1, headerAve = -1, throughput = -1;
 	
 	public double getTotalAve(){
 		if( totalAve == -1)
@@ -23,6 +23,11 @@ public class Statistics {
 		return headerAve;
 	}
 	
+	public double getThroughput(){
+		setThroughput();
+		return this.throughput;
+	}
+	
 	public Statistics(ArrayList<MyPacket> pS){
 		this.myPackets = pS;
 	}
@@ -39,6 +44,12 @@ public class Statistics {
 		this.dataAve = data_sum / myPackets.size();
 		this.headerAve = header_sum / myPackets.size();
 		
+	}
+	
+	private void setThroughput(){
+		System.out.println(myPackets.get(0).getTime());
+		System.out.println(myPackets.get(myPackets.size()-1).getTime() - myPackets.get(0).getTime());
+		this.throughput = Math.pow(10.0, 6) * (myPackets.size()+0.0) / (myPackets.get(myPackets.size()-1).getTime() - myPackets.get(0).getTime());
 	}
 
 }

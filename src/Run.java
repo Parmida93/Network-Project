@@ -38,7 +38,7 @@ public class Run {
 		try {
 			FileWriter fw = new FileWriter(file);
 			
-			String[] list = { "ID", "Header Size" , "Payload Size" , "Packet Size" , "Average Packet Size", "Average Payload Size" , "Average Header Size"};
+			String[] list = { "ID", "Header Size" , "Payload Size" , "Packet Size" , "Average Packet Size", "Average Payload Size" , "Average Header Size", "Throughput"};
 			String comma = ",";
 			String nextLine = "\n";
 			
@@ -65,6 +65,7 @@ public class Run {
 				fw.write(st.getTotalAve() + comma);
 				fw.write(st.getDataAve() + comma);
 				fw.write(st.getHeaderAve() + comma);
+				fw.write(st.getThroughput()+ comma);
 				fw.write(nextLine);
 				
 			}
